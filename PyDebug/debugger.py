@@ -16,13 +16,14 @@ __colours__ = {
 
 class Logger:
     """\n
-    A Logging module used to easliy control logging.
+        A Logging module used to easliy control logging.
+
     This is automatically called when importing the module:
 
     .. code-block:: python
         from PythonDebugger import Logger, Log
         Logger.level = 3
-        Log(f"test", level=2)
+        Log("test", level=2)
     
     Attributes
     -----------
@@ -115,11 +116,14 @@ class Logger:
 
 def main():
     """."""
-    deb = Debugger()
+    deb = Logger()
     deb.level = 0
     i = "dsfg"
     for x in range(0, 10):
-        deb.debug(f"test {x}", level=x)
+        deb.debug("test {}".format(x))
 
 if __name__ == '__main__':
     main()
+
+
+
