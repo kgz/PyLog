@@ -120,7 +120,7 @@ def main():
     deb.level = 0
     i = "dsfg"
     for x in range(0, 10):
-        deb.debug("test {}".format(x))
+        deb.Log("test {}".format(x))
 
 if __name__ == '__main__':
     main()
