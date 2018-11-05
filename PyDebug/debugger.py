@@ -91,6 +91,7 @@ class Logger:
                     print(exc)
 
             print(string)
+            print(__colours__.get("reset"))
             
             
 
