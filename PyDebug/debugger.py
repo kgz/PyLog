@@ -90,8 +90,7 @@ class Logger:
                 except Exception as exc:
                     print(exc)
 
-            print(string)
-            print(__colours__.get("reset"))
+            print(string,  end=__colours__.get("reset") + "\n")
             
             
 
