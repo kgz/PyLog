@@ -1,5 +1,5 @@
-from PyDebug import Log
-from PyDebug import Logger
+from PyLog import Log
+from PyLog import Logger
 
 
 testdict = {

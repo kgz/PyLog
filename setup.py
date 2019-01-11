@@ -9,7 +9,7 @@ readme = ''
 with open('README.md') as f:
     readme = f.read()
 
-setup(name='PyDebug',
+setup(name='PyLog',
       author='Mat Frayne',
       url='https://github.com/Mat-Frayne/PythonDebugger',
       version="0.0.1",
