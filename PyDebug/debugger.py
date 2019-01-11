@@ -5,6 +5,8 @@ from os import environ
 import sys
 import inspect
 import subprocess
+import json
+
 subprocess.call('', shell=True)
 
 __colours__ = {
@@ -13,6 +15,19 @@ __colours__ = {
     "green": "\033[38;2;32;247;0m",
     "orange": "\033[38;2;255;165;0m"
 }
+
+class jsonsettings:
+    def __init__(self, *args, **kwargs):
+        """."""
+        self.skipkeys=True
+        self.ensure_ascii=True
+        self.check_circular=True
+        self.allow_nan=True
+        self.cls=None
+        self.indent="\t"
+        self.separators=None
+        self.default=None
+        self.sort_keys=True
 
 class Logger:
     """\n
@@ -45,16 +60,22 @@ class Logger:
         self.format = "[(date)] [(time)] [(level)] [(file).(function):(line)] >> (data)"
         self.time = "%I:%M:%S %p"
         self.date = "%d %b %Y"
-        self.error_level = 3
-        self._level = kwargs.get("level", 1)
+        self._level = kwargs.get("level", int(environ.get('PyDebug', 5)))
+        print(self._level)
+        self.error_level = round(kwargs.get("error_level", self.level/3 * 2))
+        print(self.error_level)
 
+        self.json = jsonsettings
+
+
+        
     def Log(self, *args, **kwargs):
         """
         Debugs at diffrent levels.
         To change the level, set PyDebug in your environments:
                 **Windows**:  setx PyDebug <number>
                 **Linux**:  set PyDebug <number>"""
-        lvl = int(environ.get('PyDebug', 100))
+        lvl = self._level
         if  lvl >= kwargs.get("level", 1) or lvl == 0:
             time = datetime.datetime.now().strftime(self.time)
             date = datetime.datetime.now().strftime(self.date)
@@ -84,7 +105,8 @@ class Logger:
             }
             string = self.format
             for x in replacements:
-                
+                if(type(x) == dict):
+                    string = json.dumps(x, *vars(self.json))
                 try:
                     string = string.replace("({})".format(x), str(replacements[x]))
                 except Exception as exc:
@@ -97,7 +119,7 @@ class Logger:
     @property
     def warning_level(self):
         """."""
-        return round(self.error_level / 2)
+        return round((self.error_level + 1) / 2)
 
     @property
     def level(self):
@@ -109,8 +131,10 @@ class Logger:
         """Set The Level the specific module."""
         try:
             self._level = int(level)
+            self.error_level = round((self.level+1)/3 * 2)
+            self.Log("Debug level set to:", self.level)
+            self.Log("Error level set to:", self.error_level)
 
-            environ["PyDebug"] = str(level)
         except ValueError:
             raise ValueError("Value {} is not an int.".format(level))
 
