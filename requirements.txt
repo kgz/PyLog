@@ -1,1 +1,1 @@
-json
+setuptools==38.5.2
