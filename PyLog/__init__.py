@@ -1,5 +1,5 @@
 
-from . import debugger 
+from .debugger import Logger 
 
-Logger = debugger.Logger()
+Logger = Logger()
 Log = Logger.Log

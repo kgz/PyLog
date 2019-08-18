@@ -31,7 +31,7 @@ class jsonsettings:
 
 class Logger:
     """\n
-        A Logging module used to easliy control logging.
+        A Logging module used to easily control logging.
 
     This is automatically called when importing the module:
 
@@ -61,59 +61,11 @@ class Logger:
         self.time = "%I:%M:%S %p"
         self.date = "%d %b %Y"
         self._level = kwargs.get("level", int(environ.get('PyDebug', 5)))
-        print(self._level)
+        # print(self._level)
         self.error_level = round(kwargs.get("error_level", self.level/3 * 2))
-        print(self.error_level)
+        # print(self.error_level)
 
-        self.json = jsonsettings
-
-
-        
-    def Log(self, *args, **kwargs):
-        """
-        Debugs at diffrent levels.
-        To change the level, set PyDebug in your environments:
-                **Windows**:  setx PyDebug <number>
-                **Linux**:  set PyDebug <number>"""
-        lvl = self._level
-        if  lvl >= kwargs.get("level", 1) or lvl == 0:
-            time = datetime.datetime.now().strftime(self.time)
-            date = datetime.datetime.now().strftime(self.date)
-            level = kwargs.get('level', 1)
-            file = kwargs.get("file", sys.stdout)
-            curframe = inspect.currentframe()
-            ins = inspect.getouterframes(curframe, 2)
-            filename = ins[1][1].split("\\")[-1]
-            caller = ins[1][3]
-            line = ins[1][2]
-
-            color = __colours__.get("green") 
-            if self.warning_level <= level < self.error_level:
-                color = __colours__.get("orange")
-            elif level >= self.error_level:
-                color = __colours__.get("red")
-            def yellow(string):
-                return __colours__.get("orange") + str(string) + __colours__.get("reset")
-            replacements = {
-                "date": yellow(date),
-                "time": yellow(time),
-                "level": color +str(level) + __colours__.get("reset") ,
-                "file": yellow(filename),
-                "function": yellow(caller),
-                "line": yellow(line),
-                "data": color + ' '.join(str(i) for i in args) +  __colours__.get("reset")
-            }
-            string = self.format
-            for x in replacements:
-                if(type(x) == dict):
-                    string = json.dumps(x, *vars(self.json))
-                try:
-                    string = string.replace("({})".format(x), str(replacements[x]))
-                except Exception as exc:
-                    print(exc)
-
-            print(string,  end=__colours__.get("reset") + "\n")
-            
+        self.json = jsonsettings         
             
 
     @property
@@ -138,14 +90,71 @@ class Logger:
         except ValueError:
             raise ValueError("Value {} is not an int.".format(level))
 
+    def Log(self, *args, **kwargs):
+        """."""
+        return Log(self, *args, **kwargs)
+
+class Log:
+    def __init__(self, logger, *args, **kwargs):
+        """
+        Debugs at diffrent levels.
+        To change the level, set PyDebug in your environments:
+                **Windows**:  setx PyDebug <number>
+                **Linux**:  set PyDebug <number>"""
+        self.logger = logger
+        lvl = self.logger._level
+        if  lvl >= kwargs.get("level", 1) or lvl == 0:
+            time = datetime.datetime.now().strftime(self.logger.time)
+            date = datetime.datetime.now().strftime(self.logger.date)
+            level = kwargs.get('level', 1)
+            file = kwargs.get("file", sys.stdout)
+            curframe = inspect.currentframe()
+            ins = inspect.getouterframes(curframe, 2)
+            filename = ins[1][1].split("\\")[-1]
+            caller = ins[1][3]
+            line = ins[1][2]
+
+            color = __colours__.get("green") 
+            if self.logger.warning_level <= level < self.logger.error_level:
+                color = __colours__.get("orange")
+            elif level >= self.logger.error_level:
+                color = __colours__.get("red")
+
+            def yellow(string):
+                return __colours__.get("orange") + str(string) + __colours__.get("reset")
+
+            replacements = {
+                "date": yellow(date),
+                "time": yellow(time),
+                "level": color +str(level) + __colours__.get("reset") ,
+                "file": yellow(filename),
+                "function": yellow(caller),
+                "line": yellow(line),
+                "data": color + ' '.join(str(i) for i in args) +  __colours__.get("reset")
+            }
+            string = self.logger.format
+            for x in replacements:
+                if(type(x) == dict):
+                    string = json.dumps(x, *vars(self.logger.json))
+
+                try:
+                    string = string.replace("({})".format(x), str(replacements[x]))
+                except Exception as exc:
+                    print(exc)
+
+            print(string,  end=__colours__.get("reset") + "\n\r")
+            #return f"<Log output={string}{__colours__.get('reset')}\\n\\r level={lvl}>"
+
 def main():
     """."""
     deb = Logger()
-    deb.level = 0
+    deb.level = 5
     i = "dsfg"
     for x in range(0, 10):
         deb.Log("test {}".format(x))
 
+    k = deb.Log({"test": 123})
+    deb.Log(k)
 if __name__ == '__main__':
     main()
 
