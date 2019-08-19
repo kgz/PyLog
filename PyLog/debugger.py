@@ -61,13 +61,9 @@ class Logger:
         self.time = "%I:%M:%S %p"
         self.date = "%d %b %Y"
         self._level = kwargs.get("level", int(environ.get('PyDebug', 5)))
-        # print(self._level)
         self.error_level = round(kwargs.get("error_level", self.level/3 * 2))
-        # print(self.error_level)
-
         self.json = jsonsettings         
-            
-
+  
     @property
     def warning_level(self):
         """."""
@@ -90,10 +86,23 @@ class Logger:
         except ValueError:
             raise ValueError("Value {} is not an int.".format(level))
 
+    def Error(self, *args, **kwargs):
+        """."""
+        kwargs['level'] = self.error_level
+        self.Log(*args, **kwargs)
+
+    def Warn(self, *args, **kwargs):
+        """."""
+        kwargs['level'] = self.warning_level
+        self.Log(*args, **kwargs)
+
     def Log(self, *args, **kwargs):
         """."""
         return Log(self, *args, **kwargs)
 
+    def __exit__(self, exc_type, exc_value, traceback):
+        print("asdfasddfsdaffdsa")
+   
 class Log:
     def __init__(self, logger, *args, **kwargs):
         """

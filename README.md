@@ -1,32 +1,28 @@
-# PythonDebugger
+# PyLog
 My Custom Debugger
 
 ### Basic Use:
  ```Py
-from PyLog import Log
-#Default level is 5.
+from PyLog import Logger, Log, Warn, Error
+#Default logger level is 5.
+# Logger.level = 8
 
-Log("Hello World")
-Log("Hello World", 3)
+Log("Hello World") #will log at level 0 (will always show)
+Log("Hello World", 3) #Will log at the level 3
+Error("Hello World") #Will log at the Error level
+Warn("Hello World") #will log at the warning level
  ```
 ```
-[18 Aug 2019] [07:05:55 PM] [1] [<stdin>.<module>:3] >> Hello World
-[18 Aug 2019] [07:06:34 PM] [5] [<stdin>.<module>:4] >> Hello World
+[18 Aug 2019] [07:05:55 PM] [0] [<stdin>.<module>:4] >> Hello World
 ```
-
-
-
 
 
 ### Setting the debug level and custom format:
-
 ```Py
-from PyLog import Log
-from PyLog import Logger
-
+from PyLog import Log, Logger
 
 Logger.level = 4 #Anything over level 4 wont be shown in stdout
-Logger.error_level = 3 #sets anything between level 3 and the loggers level to be red.
+Logger.error_level = 3 #sets anything between level 3 and the loggers level to be classed as an error.
 
 #The warning level (orange) is (error level + 1) / 2) rounded.
 
@@ -37,7 +33,7 @@ Logger.time = "%I:%M:%S %p" #sets the time format
 Logger.date = "%d %b %Y" #sets the date format
 
 ```
-The formula for the format are  a combination of any characters and `(<var>)`
+The formula for the format are a combination of any characters and `(<var>)`
 where \<var> is one of the following:
 * date 
 * time
