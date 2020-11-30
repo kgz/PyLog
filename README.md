@@ -8,7 +8,7 @@ from PyLog import Logger, Log, Warn, Error
 # Logger.level = 8
 
 Log("Hello World") #will log at level 0 (will always show)
-Log("Hello World", 3) #Will log at the level 3
+Log("Hello World", level=3) #Will log at the level 3
 Error("Hello World") #Will log at the Error level
 Warn("Hello World") #will log at the warning level
  ```
