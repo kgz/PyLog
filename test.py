@@ -25,7 +25,10 @@ Log("-"*20)
 
 Log(testdict)
 
+def out():
+    Error("This is an Error")
+    Warn("This is a warning")
+    Log("Everything's a'ok")
 
-Error("This is an Error")
-Warn("This is a warning")
-Log("Everything is a'ok")
+
+out()

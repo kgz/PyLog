@@ -16,7 +16,7 @@ __colours__ = {
     "orange": "\033[38;2;255;165;0m"
 }
 
-class jsonsettings:
+class jsonSettings:
     def __init__(self, *args, **kwargs):
         """."""
         self.skipkeys=True
@@ -60,9 +60,9 @@ class Logger:
         self.format = "[(date)] [(time)] [(level)] [(file).(function):(line)] >> (data)"
         self.time = "%I:%M:%S %p"
         self.date = "%d %b %Y"
-        self._level = kwargs.get("level", int(environ.get('PyDebug', 5)))
+        self._level = kwargs.get("level", 0)
         self.error_level = round(kwargs.get("error_level", self.level/3 * 2))
-        self.json = jsonsettings         
+        self.json = jsonSettings         
   
     @property
     def warning_level(self):
@@ -76,52 +76,52 @@ class Logger:
 
     @level.setter
     def level(self, level):
-        """Set The Level the specific module."""
+        """Set The logging Level."""
         try:
             self._level = int(level)
             self.error_level = round((self.level+1)/3 * 2)
-            self.Log("Debug level set to:", self.level)
-            self.Log("Error level set to:", self.error_level)
+            self.Warn("Debug level set to:", self.level)
+            self.Warn("Error level set to:", self.error_level)
 
         except ValueError:
             raise ValueError("Value {} is not an int.".format(level))
 
     def Error(self, *args, **kwargs):
-        """."""
+        """Outputs an error."""
         kwargs['level'] = self.error_level
         self.Log(*args, **kwargs)
 
     def Warn(self, *args, **kwargs):
-        """."""
+        """Outputs a Warning."""
         kwargs['level'] = self.warning_level
         self.Log(*args, **kwargs)
 
     def Log(self, *args, **kwargs):
-        """."""
+        """Outputs a Log."""
         return Log(self, *args, **kwargs)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print("asdfasddfsdaffdsa")
-   
+        self.Warn("Exiting.")
+
+
 class Log:
     def __init__(self, logger, *args, **kwargs):
         """
         Debugs at diffrent levels.
-        To change the level, set PyDebug in your environments:
-                **Windows**:  setx PyDebug <number>
-                **Linux**:  set PyDebug <number>"""
+        """
         self.logger = logger
         lvl = self.logger._level
-        if  lvl >= kwargs.get("level", 1) or lvl == 0:
+        if  lvl >= kwargs.get("level", kwargs.get("lvl", 1)) or lvl == 0:
             time = datetime.datetime.now().strftime(self.logger.time)
             date = datetime.datetime.now().strftime(self.logger.date)
             level = kwargs.get('level', 1)
             file = kwargs.get("file", sys.stdout)
             curframe = inspect.currentframe()
             ins = inspect.getouterframes(curframe, 2)
-            filename = ins[1][1].split("\\")[-1]
-            caller = ins[1][3]
-            line = ins[1][2]
+            # print(ins[2])
+            filename = ins[2][1].split("\\")[-1]
+            caller = ins[2][3]
+            line = ins[2][2]
 
             color = __colours__.get("green") 
             if self.logger.warning_level <= level < self.logger.error_level:
@@ -150,22 +150,8 @@ class Log:
                     string = string.replace("({})".format(x), str(replacements[x]))
                 except Exception as exc:
                     print(exc)
-
+            
             print(string,  end=__colours__.get("reset") + "\n\r")
             #return f"<Log output={string}{__colours__.get('reset')}\\n\\r level={lvl}>"
-
-def main():
-    """."""
-    deb = Logger()
-    deb.level = 5
-    i = "dsfg"
-    for x in range(0, 10):
-        deb.Log("test {}".format(x))
-
-    k = deb.Log({"test": 123})
-    deb.Log(k)
-if __name__ == '__main__':
-    main()
-
 
 
