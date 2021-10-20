@@ -57,7 +57,7 @@ class Logger:
 
     def __init__(self, *args, **kwargs):
         """."""
-        self.format = "[(date)] [(time)] [(level)] [(file).(function):(line)] >> (data)"
+        self.format = "[(date)][(time)][(level)][(file).(function):(line)] >> (data)"
         self.time = "%I:%M:%S %p"
         self.date = "%d %b %Y"
         self._level = kwargs.get("level", 0)
