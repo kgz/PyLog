@@ -12,7 +12,7 @@ with open('README.md') as f:
 setup(name='PyLog',
       author='Mat Frayne',
       url='https://github.com/Mat-Frayne/PythonDebugger',
-      version="0.0.1",
+      version="0.0.2",
       packages=['PyLog'],
       license='MIT',
       description='Im Learning',
