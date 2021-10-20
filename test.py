@@ -1,6 +1,6 @@
 from PyLog import *
 from PyLog import Logger
-
+from test1 import test1
 
 testdict = {
     "a" : 1,
@@ -29,6 +29,6 @@ def out():
     Error("This is an Error")
     Warn("This is a warning")
     Log("Everything's a'ok")
-
+    t = test1()
 
 out()
